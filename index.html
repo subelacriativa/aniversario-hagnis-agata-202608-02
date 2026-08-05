@@ -421,9 +421,9 @@
         document.getElementById('tela-inicial').classList.add('escondido');
         document.getElementById('tela-mensagem').classList.remove('escondido');
 
-        // Toca a música de fundo em piano com volume ajustado para 30%
+        // Toca a música de fundo em piano com volume ajustado para 40%
         if (musicaFundo) {
-            musicaFundo.volume = 0.3; // Volume definido em 30%
+            musicaFundo.volume = 0.4; // Volume definido em 40%
             musicaFundo.play().catch(err => console.log("Aviso de áudio ajustado.", err));
         }
     }
