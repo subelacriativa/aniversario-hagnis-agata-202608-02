@@ -153,6 +153,13 @@
             box-shadow: 0 15px 30px rgba(255, 117, 140, 0.4);
         }
 
+        .btn-clique {
+            margin: 20px 0;
+            padding: 14px 24px;
+            font-size: 0.95rem;
+            background: linear-gradient(135deg, #ff85a2 0%, #ffabe7 100%);
+        }
+
         /* Cores Específicas do Menu Final */
         .btn-whatsapp { background: #25D366; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2); }
         .btn-baixar { background: #2563eb; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2); }
@@ -244,24 +251,31 @@
         <p><strong>Para minha irmã...</strong></p>
         <p>Há pessoas que passam pela nossa vida...</p>
         <p>E existem aquelas que caminham ao nosso lado desde o início da nossa história. Você é uma dessas pessoas.</p>
-        <p>Muito mais do que minha irmã... Você é minha amiga, minha companhia, minha lembrança mais bonita da infância, meu porto seguro nos dias difíceis e um pedaço do meu coração que Deus colocou em outra vida.</p>
+        <p>Muito mais do que minha irmã...</p>
+        <p>Você é minha amiga, minha companhia, minha lembrança mais bonita da infância, meu porto seguro nos dias difíceis e um pedaço do meu coração que Deus colocou em outra vida.</p>
         <p>Ao longo dos anos colecionamos risadas, segredos, brincadeiras, abraços, lágrimas, conquistas e momentos que jamais poderão ser apagados.</p>
         <p>Cada memória ao seu lado faz parte de quem eu sou hoje.</p>
         <p>E se existe algo que desejo para você, é que nunca lhe faltem motivos para sorrir, sonhar e acreditar que coisas maravilhosas ainda estão por vir.</p>
         <p><i>Mas antes de continuar...</i></p>
 
-        <div class="frase-interativa">
-            Complete esta frase:<br>
-            <strong>Feliz Vida minha <span id="lacuna" class="lacuna">__________</span> ❤️</strong>
-        </div>
+        <button id="btn-clique-aqui" class="btn-principal btn-clique" onclick="revelarContinuacao()">
+            Clique aqui &gt;&gt;&gt;
+        </button>
 
-        <div id="continuacao-mensagem" class="escondido">
-            <p>Porque é assim que meu coração sempre vai lembrar de você.</p>
-            <p><strong>Minha Amendoim.</strong></p>
-            <p>Que Deus continue iluminando seus caminhos, protegendo seus passos e enchendo sua vida de amor, saúde, paz e felicidade.</p>
-            <p>Obrigada por existir. Obrigada por ser exatamente quem você é.</p>
-            <p>Eu te amo infinitamente.</p>
-            <p style="margin-top: 20px;"><strong>Com todo meu carinho,<br>Ágata ❤️</strong></p>
+        <div id="bloco-revelacao" class="escondido">
+            <div class="frase-interativa">
+                Complete esta frase:<br>
+                <strong>Feliz Vida minha <span id="lacuna" class="lacuna">__________</span> ❤️</strong>
+            </div>
+
+            <div id="continuacao-mensagem" class="escondido">
+                <p>Porque é assim que meu coração sempre vai lembrar de você.</p>
+                <p><strong>Minha Amendoim.</strong></p>
+                <p>Que Deus continue iluminando seus caminhos, protegendo seus passos e enchendo sua vida de amor, saúde, paz e felicidade.</p>
+                <p>Obrigada por existir. Obrigada por ser exatamente quem você é.</p>
+                <p>Eu te amo infinitamente.</p>
+                <p style="margin-top: 20px;"><strong>Com todo meu carinho,<br>Ágata ❤️</strong></p>
+            </div>
         </div>
     </div>
 
@@ -312,22 +326,29 @@
 
     function irParaMensagem() {
         document.getElementById('tela-inicial').classList.add('escondido');
-        const telaMensagem = document.getElementById('tela-mensagem');
-        telaMensagem.classList.remove('escondido');
+        document.getElementById('tela-mensagem').classList.remove('escondido');
+    }
 
-        // Aguarda 3 segundos para revelar automaticamente a palavra "Amendoim"
+    function revelarContinuacao() {
+        // Esconde o botão "Clique aqui >>>"
+        document.getElementById('btn-clique-aqui').classList.add('escondido');
+        
+        // Exibe o bloco de frases
+        document.getElementById('bloco-revelacao').classList.remove('escondido');
+
+        // Aguarda 3 segundos para revelar a palavra "Amendoim"
         setTimeout(() => {
             const lacuna = document.getElementById('lacuna');
-            lacuna.innerText = "Amendoim!!! 🥜❤️";
+            lacuna.innerText = "Amendoim!!! 🥜❤️ ❤️";
             lacuna.classList.add('revelado');
 
-            // Exibe o restante do texto e o botão de assistir ao vídeo
+            // Exibe a continuação do texto e o botão do vídeo
             setTimeout(() => {
                 document.getElementById('continuacao-mensagem').classList.remove('escondido');
                 const btnVideo = document.getElementById('btn-video');
                 btnVideo.classList.remove('escondido');
                 btnVideo.scrollIntoView({ behavior: 'smooth' });
-            }, 1200);
+            }, 800);
         }, 3000);
     }
 
@@ -340,12 +361,12 @@
         video.muted = false;
         video.play().catch(err => console.log("Aviso de reprodução ajustado.", err));
 
-        // Prepara a URL de compartilhamento do WhatsApp
+        // Prepara o link de compartilhamento do WhatsApp
         const linkWa = `https://api.whatsapp.com/send?text=${encodeURIComponent(textoWhatsapp + " " + urlSite)}`;
         document.getElementById('link-whatsapp').href = linkWa;
     }
 
-    // Exibe o menu de opções ao terminar o vídeo
+    // Exibe o menu final ao encerrar o vídeo
     document.getElementById('video-principal').onended = function() {
         document.getElementById('menu-fim-video').style.display = 'flex';
     };
