@@ -246,6 +246,8 @@
     💕 🤍 🌸 🦋 ✨ 💖 🌷 🌺
 </div>
 
+<audio id="musica-fundo" src="Audio-Stephen-Sanchez-Until-I-Found-You-Piano.mp3" loop></audio>
+
 <main class="cartao-surpresa" id="tela-inicial">
     <h1>Uma Surpresa Especial Para Você 💖</h1>
     
@@ -340,10 +342,17 @@
 <script>
     const textoWhatsapp = "Olha a linda homenagem que recebi da minha irmã! ❤️ Vale muito a pena assistir.";
     const urlSite = window.location.href;
+    const musicaFundo = document.getElementById('musica-fundo');
 
     function irParaMensagem() {
         document.getElementById('tela-inicial').classList.add('escondido');
         document.getElementById('tela-mensagem').classList.remove('escondido');
+
+        // Toca a música de fundo em piano
+        if (musicaFundo) {
+            musicaFundo.volume = 0.3; // Define o volume em 30% (suave)
+            musicaFundo.play().catch(err => console.log("Aviso de áudio ajustado.", err));
+        }
     }
 
     function dispararFogos() {
@@ -398,6 +407,11 @@
     }
 
     function iniciarVideo() {
+        // Pausa a música de fundo para não empobrecer/sobrepor com o áudio do vídeo
+        if (musicaFundo) {
+            musicaFundo.pause();
+        }
+
         const player = document.getElementById('container-player');
         const video = document.getElementById('video-principal');
         
