@@ -129,6 +129,18 @@
             animation: bounce 0.6s ease;
         }
 
+        /* Coração Pulsante */
+        .coracao-pulsante {
+            display: inline-block;
+            animation: pulso 1.2s infinite ease-in-out;
+        }
+
+        @keyframes pulso {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
         /* Botões */
         .btn-principal {
             background: var(--cor-gradiente);
@@ -279,7 +291,7 @@
                 <p>Que Deus continue iluminando seus caminhos, protegendo seus passos e enchendo sua vida de amor, saúde, paz e felicidade.</p>
                 <p>Obrigada por existir. Obrigada por ser exatamente quem você é.</p>
                 <p>Eu te amo infinitamente.</p>
-                <p style="margin-top: 20px;"><strong>Com todo meu carinho,<br>Ágata ❤️</strong></p>
+                <p style="margin-top: 20px;"><strong>Com todo meu carinho,<br>Ágata <span class="coracao-pulsante">❤️</span></strong></p>
             </div>
         </div>
     </div>
@@ -335,7 +347,6 @@
     }
 
     function dispararFogos() {
-        // Explosão de fogos usando Canvas Confetti
         var count = 200;
         var defaults = {
             origin: { y: 0.7 }
@@ -356,7 +367,7 @@
 
     function vibrarCelular() {
         if ("vibrate" in navigator) {
-            navigator.vibrate([200, 100, 200, 100, 400]); // Padrão alegre de vibração
+            navigator.vibrate([200, 100, 200, 100, 400]);
         }
     }
 
@@ -377,12 +388,10 @@
             dispararFogos();
             vibrarCelular();
 
-            // 4. Aguarda mais 3 segundos para exibir o restante da mensagem e o botão
+            // 4. Aguarda mais 3 segundos para exibir o restante da mensagem e o botão (Sem rolar a tela)
             setTimeout(() => {
                 document.getElementById('continuacao-mensagem').classList.remove('escondido');
-                const btnVideo = document.getElementById('btn-video');
-                btnVideo.classList.remove('escondido');
-                btnVideo.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('btn-video').classList.remove('escondido');
             }, 3000);
 
         }, 3000);
