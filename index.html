@@ -43,12 +43,12 @@
             background-color: #fff7fb;
         }
 
-        /* Imagem de Fundo com 60% de Opacidade */
+        /* Imagem de Fundo baseada na música (60% de Opacidade) */
         body::before {
             content: "";
             position: fixed;
             inset: 0;
-            background-image: url('img-fundo.jpg');
+            background-image: url('img-fundo.jpg'); /* Certifique-se de ter a imagem 'image_17.png' salva com este nome */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -242,9 +242,68 @@
         .rodape img { max-width: 85px; height: auto; }
         .rodape span { font-size: 11px; color: var(--cor-subtexto); font-weight: 600; }
 
+        /* Overlay de Transição (Escurecimento + Névoa) */
+        .overlay-transicao {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: background-color 1.5s ease, opacity 1s ease;
+        }
+
+        .overlay-transicao.ativo {
+            pointer-events: auto;
+            opacity: 1;
+            background-color: rgba(0, 0, 0, 0.85); /* Escurece suavemente a tela */
+        }
+
+        /* Efeito de Névoa Branca e Soft */
+        .nevoa-suave {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 70%);
+            filter: blur(20px);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1.8s ease-in-out;
+        }
+
+        .overlay-transicao.ativo .nevoa-suave {
+            opacity: 1;
+            transform: scale(1.3);
+            animation: pulsarNevoa 3s infinite alternate ease-in-out;
+        }
+
+        /* Mensagem de Suspense */
+        .texto-suspense {
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 1s ease 0.5s;
+            z-index: 2;
+        }
+
+        .overlay-transicao.ativo .texto-suspense {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         /* Animações Auxiliares */
         @keyframes surgir { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+        @keyframes pulsarNevoa {
+            0% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1.4); opacity: 1; }
+        }
 
         .escondido { display: none !important; }
     </style>
@@ -255,7 +314,12 @@
     💕 🤍 🌸 🦋 ✨ 💖 🌷 🌺
 </div>
 
-<audio id="musica-fundo" src="Audio-Sandy-e-Junior-No-Fundo-Do-Coracao.mp3" loop></audio>
+<audio id="musica-fundo" src="Audio-Stephen-Sanchez-Until-I-Found-You-Piano.mp3" loop></audio>
+
+<div id="overlay-transicao" class="overlay-transicao">
+    <div class="nevoa-suave"></div>
+    <div class="texto-suspense">Prepare o seu coração... 💖</div>
+</div>
 
 <main class="cartao-surpresa" id="tela-inicial">
     <h1>Uma Surpresa Especial Para Você 💖</h1>
@@ -406,7 +470,7 @@
             dispararFogos();
             vibrarCelular();
 
-            // 4. Aguarda mais 3 segundos para exibir o restante da mensagem e o botão
+            // 4. Aguarda mais 3 segundos para exibir o restante da mensagem e o botão (Sem rolar a tela)
             setTimeout(() => {
                 document.getElementById('continuacao-mensagem').classList.remove('escondido');
                 document.getElementById('btn-video').classList.remove('escondido');
@@ -416,23 +480,41 @@
     }
 
     function iniciarVideo() {
-        // Pausa a música de fundo para não sobrepor o áudio do vídeo
+        // 1. Pausa a música de fundo
         if (musicaFundo) {
             musicaFundo.pause();
         }
 
+        const overlay = document.getElementById('overlay-transicao');
         const player = document.getElementById('container-player');
         const video = document.getElementById('video-principal');
-        
-        player.style.display = 'flex';
-        video.currentTime = 0;
-        video.muted = false;
-        video.play().catch(err => console.log("Aviso de reprodução ajustado.", err));
 
-        const linkWa = `https://api.whatsapp.com/send?text=${encodeURIComponent(textoWhatsapp + " " + urlSite)}`;
-        document.getElementById('link-whatsapp').href = linkWa;
+        // 2. Ativa o efeito de névoa e escurecimento da tela
+        overlay.classList.add('ativo');
+
+        // 3. Aguarda 2.5 segundos de suspense com a névoa na tela...
+        setTimeout(() => {
+            // Exibe o player de vídeo
+            player.style.display = 'flex';
+            video.currentTime = 0;
+            video.muted = false;
+
+            // Inicia a reprodução do vídeo
+            video.play().catch(err => console.log("Aviso de reprodução ajustado.", err));
+
+            // 4. Remove o efeito de névoa suavemente enquanto o vídeo começa
+            setTimeout(() => {
+                overlay.classList.remove('ativo');
+            }, 500);
+
+            // Prepara o link do WhatsApp
+            const linkWa = `https://api.whatsapp.com/send?text=${encodeURIComponent(textoWhatsapp + " " + urlSite)}`;
+            document.getElementById('link-whatsapp').href = linkWa;
+
+        }, 2500); // Tempo de suspense (2,5 segundos)
     }
 
+    // Exibe o menu final ao encerrar o vídeo
     document.getElementById('video-principal').onended = function() {
         document.getElementById('menu-fim-video').style.display = 'flex';
     };
